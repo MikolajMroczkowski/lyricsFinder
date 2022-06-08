@@ -3,6 +3,28 @@ body {
   justify-content: center;
   align-items: center;
 
+  a {
+    all: unset;
+
+    .closeBtn {
+      position: absolute;
+      z-index: 1;
+      top: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.42);
+      padding: 10px;
+      font-size: 30px;
+      text-align: center;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  }
+
   main {
     width: max-content;
     display: flex;
