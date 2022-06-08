@@ -17,7 +17,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/tekst', function (req, res) {
-    if(req.query.title != "" && req.query.artist!=""){
+    if(req.query.title !== "" && req.query.artist!==""){
         (async function(artist, title) {
             let lyrics = await lyricsFinder(artist, title) || "Nie znaleziono tekstu :C";
             lyrics = lyrics.split('\n')
