@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%- title %> - <%- artist %></title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main>
+    <div class="col">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/<%- url %>" title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+    </div>
+    <div class="col text">
+        <p>
+        <% for(var x = 0; x < lyric.length; x++){ %>
+            <%- lyric[x] %><br>
+        <% } %>
+        </p>
+    </div>
+</main>
+
+</body>
+</html>

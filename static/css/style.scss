@@ -1,0 +1,101 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  main {
+    width: max-content;
+    display: flex;
+    height: 80%;
+    border-radius: 5px;
+
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: none;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+    }
+
+    background: rgba(0, 0, 0, 0.42);
+    padding: 20px;
+
+    .col {
+      display: flex;
+      align-items: center;
+      margin-left: 50px;
+      margin-right: 50px;
+
+    }
+
+    .text {
+      overflow: auto;
+      align-items: flex-start;
+      padding-right: 50px;
+
+      p {
+        font-size: 23px;
+        color: rgba(0, 0, 0, 0.68);
+        line-height: 1.6;
+      }
+    }
+
+  }
+
+  .selectBox {
+    height: max-content;
+    width: 25%;
+    min-width: 400px;
+
+    form {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      input {
+        all: unset;
+        justify-self: center;
+        width: 90%;
+        padding: 5px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #ffffff;
+        margin: 5px;
+      }
+
+      p {
+        width: 90%;
+        text-align: right;
+        margin-top: 10px;
+        color: white;
+
+        input[type=submit] {
+          width: max-content;
+          margin: -5px;
+        }
+      }
+    }
+  }
+
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  height: 100vh;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
