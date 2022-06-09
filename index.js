@@ -24,8 +24,8 @@ app.get('/lyrics', function (req, res) {
 
         (async function (artist, title) {
             let lyrics = await lyricsFinder(artist, title) || "err";
-            if("err"===lyrics){
-                res.redirect("/lyricsv2?title="+req.query.title+"&artist="+req.query.artist)
+            if ("err" === lyrics) {
+                res.redirect("/lyricsv2?title=" + req.query.title + "&artist=" + req.query.artist)
                 return;
             }
             lyrics = lyrics.split('\n')
@@ -71,7 +71,7 @@ app.get('/lyricsv2', function (req, res) {
                         var tekst = []
                         var main = HTMLParser.parse(b);
                         var tekstObj = main.querySelectorAll('.inner-text')[0]
-                        if(tekstObj.childNodes===undefined){
+                        if (tekstObj.childNodes === undefined) {
                             res.redirect("/?error=Szukaliśmy, nie znaleźliśmy :c");
                             return
                         }
@@ -108,4 +108,3 @@ app.get('/lyricsv2', function (req, res) {
 
 app.listen(8080);
 console.log('Server is listening on port 8080');
-
