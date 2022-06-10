@@ -5,11 +5,13 @@ var bodyParser = require('body-parser')
 const yts = require('yt-search')
 var HTMLParser = require('node-html-parser');
 const https = require("https");
+var getIP = require('ipware')().get_ip;
 
 var app = express();
 
 const logRequestStart = (req, res, next) => {
-    console.info(`${req.socket.remoteAddress} ${req.method} ${req.originalUrl} ${JSON.stringify(req.query)}`)
+    var ipInfo = getIP(req);
+    console.info(`${ipInfo.clientIp} ${req.method} ${req.originalUrl} ${JSON.stringify(req.query)}`)
     next()
 }
 
