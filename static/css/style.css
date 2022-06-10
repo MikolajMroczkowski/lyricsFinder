@@ -4,7 +4,7 @@ body {
   align-items: center;
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
   background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
+  animation: gradient 40s ease infinite;
   height: 100vh; }
   body .modal {
     position: absolute;
@@ -97,6 +97,12 @@ body {
         body .selectBox form p input[type=submit] {
           width: max-content;
           margin: -5px; }
+  body .git {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 35px;
+    color: rgba(0, 0, 0, 0.5); }
 
 @keyframes gradient {
   0% {
