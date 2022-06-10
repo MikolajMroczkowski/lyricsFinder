@@ -117,7 +117,9 @@ app.get('/lyricsv2', function (req, res) {
                             });
                         })
                     });
-                });
+                }).on('error',function () {
+                    res.redirect("/?error=1");
+                })
 
             });
         }).on('error', function (e) {
