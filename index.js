@@ -11,7 +11,14 @@ var app = express();
 
 const logRequestStart = (req, res, next) => {
     var ipInfo = getIP(req);
-    console.info(`${ipInfo.clientIp} ${req.method} ${req.originalUrl} ${JSON.stringify(req.query)}`)
+    var currentdate = new Date();
+    var datetime = currentdate.getDate() + "/"
+        + (currentdate.getMonth()+1)  + "/"
+        + currentdate.getFullYear() + "@"
+        + currentdate.getHours() + ":"
+        + currentdate.getMinutes() + ":"
+        + currentdate.getSeconds();
+    console.info(`${datetime}: ${ipInfo.clientIp} ${req.method} ${req.originalUrl} ${JSON.stringify(req.query)}`)
     next()
 }
 
