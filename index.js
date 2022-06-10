@@ -15,7 +15,13 @@ app.use(cookieParser())
 app.set('view engine', 'ejs');
 
 app.get('/', function (req, res) {
-    res.render("main", {error: req.query.error});
+    var errors = ["Wprowadź poprawne dane","Nie znaleziono tekstu",""]
+    var errIndex = req.query.error;
+    if(errIndex===undefined){
+        errIndex=2;
+    }
+    var error = errors[errIndex];
+    res.render("main", {error: error});
 });
 
 app.get('/lyrics', function (req, res) {
@@ -41,7 +47,7 @@ app.get('/lyrics', function (req, res) {
 
         })(req.query.artist, req.query.title);
     } else {
-        res.redirect("/?error=Wprowadź pełne dane");
+        res.redirect("/?error=0");
     }
 });
 
@@ -52,57 +58,60 @@ app.get('/lyricsv2', function (req, res) {
             port: 443,
             path: '/szukaj,wykonawca,' + req.query.artist.replaceAll(" ", "+") + ',tytul,' + req.query.title.replaceAll(" ", "+") + '.html'
         };
-
-        https.get(options, function (resa) {
-            var a = "";
-            resa.on('data', function (d) {
-                a += d;
-            });
-            resa.on('end', function () {
-                var root = HTMLParser.parse(a);
-                optionsa = options
-                optionsa.path = root.querySelectorAll('.content')[0].querySelectorAll('.title')[0]._rawAttrs.href;
-                https.get(optionsa, function (resb) {
-                    var b = ""
-                    resb.on('data', function (d) {
-                        b += d;
-                    });
-                    resb.on('end', async function () {
-                        var tekst = []
-                        var main = HTMLParser.parse(b);
-                        var tekstObj = main.querySelectorAll('.inner-text')[0]
-                        if (tekstObj.childNodes === undefined) {
-                            res.redirect("/?error=Szukaliśmy, nie znaleźliśmy :c");
-                            return
-                        }
-                        for (var x = 0; x < tekstObj.childNodes.length; x++) {
-                            if (tekstObj.childNodes[x]._rawText !== undefined) {
-                                tekst.push(tekstObj.childNodes[x]._rawText);
-                            }
-                        }
-                        const r = await yts(req.query.artist + " " + req.query.title)
-                        const videos = r.videos.slice(0, 1)
-                        videos.forEach(function (v) {
-                            const views = String(v.views).padStart(10, ' ')
-                            var urlP = v.url.split('/');
-                            var url = urlP[urlP.length - 1]
-                            url = url.replace("watch?v=", "")
-                            res.render("tekst", {
-                                lyric: tekst,
-                                url: url,
-                                title: req.query.title,
-                                artist: req.query.artist
-                            });
-                        })
-                    });
+        try{
+            https.get(options, function (resa) {
+                var a = "";
+                resa.on('data', function (d) {
+                    a += d;
                 });
+                resa.on('end', function () {
+                    var root = HTMLParser.parse(a);
+                    optionsa = options
+                    optionsa.path = root.querySelectorAll('.content')[0].querySelectorAll('.title')[0]._rawAttrs.href;
+                    https.get(optionsa, function (resb) {
+                        var b = ""
+                        resb.on('data', function (d) {
+                            b += d;
+                        });
+                        resb.on('end', async function () {
+                            var tekst = []
+                            var main = HTMLParser.parse(b);
+                            var tekstObj = main.querySelectorAll('.inner-text')[0]
+                            if (tekstObj.childNodes === undefined) {
+                                return
+                            }
+                            for (var x = 0; x < tekstObj.childNodes.length; x++) {
+                                if (tekstObj.childNodes[x]._rawText !== undefined) {
+                                    tekst.push(tekstObj.childNodes[x]._rawText);
+                                }
+                            }
+                            const r = await yts(req.query.artist + " " + req.query.title)
+                            const videos = r.videos.slice(0, 1)
+                            videos.forEach(function (v) {
+                                const views = String(v.views).padStart(10, ' ')
+                                var urlP = v.url.split('/');
+                                var url = urlP[urlP.length - 1]
+                                url = url.replace("watch?v=", "")
+                                res.render("tekst", {
+                                    lyric: tekst,
+                                    url: url,
+                                    title: req.query.title,
+                                    artist: req.query.artist
+                                });
+                            })
+                        });
+                    });
 
-            });
-        }).on('error', function (e) {
-            res.send(e)
-        })
+                });
+            }).on('error', function (e) {
+                res.redirect("/?error=1");
+            })
+        }
+        catch (e) {
+            res.redirect("/?error=1");
+        }
     } else {
-        res.redirect("/?error=Wprowadź pełne dane");
+        res.redirect("/?error=1");
     }
 });
 
