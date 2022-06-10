@@ -18,7 +18,7 @@ const logRequestStart = (req, res, next) => {
         + currentdate.getHours() + ":"
         + currentdate.getMinutes() + ":"
         + currentdate.getSeconds();
-    console.info(`${datetime}: ${ipInfo.clientIp} ${req.method} ${req.originalUrl} ${JSON.stringify(req.query)}`)
+    console.info(`${datetime}: ${ipInfo.clientIp} ${req.method} ${req.originalUrl}}`)
     next()
 }
 
