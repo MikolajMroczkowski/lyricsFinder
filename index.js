@@ -15,10 +15,10 @@ app.use(cookieParser())
 app.set('view engine', 'ejs');
 
 app.get('/', function (req, res) {
-    var errors = ["Wprowadź poprawne dane","Nie znaleziono tekstu",""]
+    var errors = ["Wprowadź poprawne dane", "Nie znaleziono tekstu", ""]
     var errIndex = req.query.error;
-    if(errIndex===undefined){
-        errIndex=2;
+    if (errIndex === undefined) {
+        errIndex = 2;
     }
     var error = errors[errIndex];
     res.render("main", {error: error});
@@ -38,7 +38,6 @@ app.get('/lyrics', function (req, res) {
             const r = await yts(req.query.artist + " " + req.query.title)
             const videos = r.videos.slice(0, 1)
             videos.forEach(function (v) {
-                const views = String(v.views).padStart(10, ' ')
                 var urlP = v.url.split('/');
                 var url = urlP[urlP.length - 1]
                 url = url.replace("watch?v=", "")
@@ -58,58 +57,57 @@ app.get('/lyricsv2', function (req, res) {
             port: 443,
             path: '/szukaj,wykonawca,' + req.query.artist.replaceAll(" ", "+") + ',tytul,' + req.query.title.replaceAll(" ", "+") + '.html'
         };
-        try{
-            https.get(options, function (resa) {
-                var a = "";
-                resa.on('data', function (d) {
-                    a += d;
-                });
-                resa.on('end', function () {
-                    var root = HTMLParser.parse(a);
-                    optionsa = options
-                    optionsa.path = root.querySelectorAll('.content')[0].querySelectorAll('.title')[0]._rawAttrs.href;
-                    https.get(optionsa, function (resb) {
-                        var b = ""
-                        resb.on('data', function (d) {
-                            b += d;
-                        });
-                        resb.on('end', async function () {
-                            var tekst = []
-                            var main = HTMLParser.parse(b);
-                            var tekstObj = main.querySelectorAll('.inner-text')[0]
-                            if (tekstObj.childNodes === undefined) {
-                                return
-                            }
-                            for (var x = 0; x < tekstObj.childNodes.length; x++) {
-                                if (tekstObj.childNodes[x]._rawText !== undefined) {
-                                    tekst.push(tekstObj.childNodes[x]._rawText);
-                                }
-                            }
-                            const r = await yts(req.query.artist + " " + req.query.title)
-                            const videos = r.videos.slice(0, 1)
-                            videos.forEach(function (v) {
-                                const views = String(v.views).padStart(10, ' ')
-                                var urlP = v.url.split('/');
-                                var url = urlP[urlP.length - 1]
-                                url = url.replace("watch?v=", "")
-                                res.render("tekst", {
-                                    lyric: tekst,
-                                    url: url,
-                                    title: req.query.title,
-                                    artist: req.query.artist
-                                });
-                            })
-                        });
+        https.get(options, function (resa) {
+            var a = "";
+            resa.on('data', function (d) {
+                a += d;
+            });
+            resa.on('end', function () {
+                var root = HTMLParser.parse(a);
+                optionsa = options
+                if(root.querySelectorAll('.content')[0].querySelectorAll('.title')[0]===undefined){
+                    res.redirect("/?error=1");
+                    return
+                }
+                optionsa.path = root.querySelectorAll('.content')[0].querySelectorAll('.title')[0]._rawAttrs.href;
+                https.get(optionsa, function (resb) {
+                    var b = ""
+                    resb.on('data', function (d) {
+                        b += d;
                     });
-
+                    resb.on('end', async function () {
+                        var tekst = []
+                        var main = HTMLParser.parse(b);
+                        var tekstObj = main.querySelectorAll('.inner-text')[0]
+                        if (tekstObj.childNodes === undefined) {
+                            return
+                        }
+                        for (var x = 0; x < tekstObj.childNodes.length; x++) {
+                            if (tekstObj.childNodes[x]._rawText !== undefined) {
+                                tekst.push(tekstObj.childNodes[x]._rawText);
+                            }
+                        }
+                        const r = await yts(req.query.artist + " " + req.query.title)
+                        const videos = r.videos.slice(0, 1)
+                        videos.forEach(function (v) {
+                            var urlP = v.url.split('/');
+                            var url = urlP[urlP.length - 1]
+                            url = url.replace("watch?v=", "")
+                            res.render("tekst", {
+                                lyric: tekst,
+                                url: url,
+                                title: req.query.title,
+                                artist: req.query.artist
+                            });
+                        })
+                    });
                 });
-            }).on('error', function (e) {
-                res.redirect("/?error=1");
-            })
-        }
-        catch (e) {
+
+            });
+        }).on('error', function (e) {
             res.redirect("/?error=1");
-        }
+        })
+
     } else {
         res.redirect("/?error=1");
     }
