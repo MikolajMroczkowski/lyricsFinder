@@ -8,6 +8,13 @@ const https = require("https");
 
 var app = express();
 
+const logRequestStart = (req, res, next) => {
+    console.info(`${req.socket.remoteAddress} ${req.method} ${req.originalUrl} ${JSON.stringify(req.query)}`)
+    next()
+}
+
+app.use(logRequestStart)
+
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static(__dirname + '/static'));
 app.use(cookieParser())
